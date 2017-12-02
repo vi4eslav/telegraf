@@ -129,5 +129,9 @@ docker-kill:
 	-docker rm aerospike elasticsearch kafka memcached mqtt mysql nats nsq \
 		openldap postgres rabbitmq redis riemann zookeeper cratedb
 
+docs:
+	sphinx-build -b html . build
+	@echo "file://$(shell pwd)/build/docs/index.html"
+
 .PHONY: deps telegraf telegraf.exe install test test-windows lint test-all \
-	package clean docker-run docker-run-circle docker-kill docker-image
+	package clean docker-run docker-run-circle docker-kill docker-image docs
