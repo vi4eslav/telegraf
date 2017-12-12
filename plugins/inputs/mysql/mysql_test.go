@@ -127,26 +127,28 @@ func TestMysqlDNSAddTimeout(t *testing.T) {
 		}
 	}
 }
-
-func TestParseValue(t *testing.T) {
+func TestIsParseValue(t *testing.T) {
 	testCases := []struct {
-		rawByte   sql.RawBytes
-		value     float64
-		boolValue bool
+		rawByte sql.RawBytes
+		output  interface{}
 	}{
-		{sql.RawBytes("Yes"), 1, true},
-		{sql.RawBytes("No"), 0, false},
-		{sql.RawBytes("ON"), 1, true},
-		{sql.RawBytes("OFF"), 0, false},
-		{sql.RawBytes("ABC"), 0, false},
+		{sql.RawBytes("123"), int64(123)},
+		{sql.RawBytes("abc"), "abc"},
+		{sql.RawBytes("10.1"), 10.1},
+		{sql.RawBytes("ON"), 1},
+		{sql.RawBytes("OFF"), 0},
+		{sql.RawBytes("NO"), 0},
+		{sql.RawBytes("YES"), 1},
+		{sql.RawBytes("No"), 0},
+		{sql.RawBytes("Yes"), 1},
+		{sql.RawBytes(""), nil},
 	}
 	for _, cases := range testCases {
-		if value, ok := parseValue(cases.rawByte); value != cases.value && ok != cases.boolValue {
-			t.Errorf("want %d with %t, got %d with %t", int(cases.value), cases.boolValue, int(value), ok)
+		if got := parseValue(cases.rawByte); got != cases.output {
+			t.Errorf("for %s wanted %t, got %t", string(cases.rawByte), cases.output, got)
 		}
 	}
 }
-
 func TestNewNamespace(t *testing.T) {
 	testCases := []struct {
 		words     []string
