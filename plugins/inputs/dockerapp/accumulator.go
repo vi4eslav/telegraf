@@ -105,21 +105,16 @@ func (ac *accumulator) AddError(err error) {
 	}
 }
 
-func (ac *accumulator) SetPrecision(precision, interval time.Duration) {
-	if precision > 0 {
-		ac.precision = precision
-		return
-	}
-	switch {
-	case interval >= time.Second:
-		ac.precision = time.Second
-	case interval >= time.Millisecond:
-		ac.precision = time.Millisecond
-	case interval >= time.Microsecond:
-		ac.precision = time.Microsecond
-	default:
-		ac.precision = time.Nanosecond
-	}
+func (ac *accumulator) AddMetric(m telegraf.Metric) {
+	return
+}
+
+func (ac *accumulator) SetPrecision(precision time.Duration) {
+	return
+}
+
+func (ac *accumulator) WithTracking(maxTracked int) telegraf.TrackingAccumulator {
+	return nil
 }
 
 func (ac accumulator) getTime(t []time.Time) time.Time {
